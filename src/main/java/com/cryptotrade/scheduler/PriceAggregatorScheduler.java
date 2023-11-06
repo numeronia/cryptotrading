@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import main.java.com.cryptotrade.model.PricingDataWrapper;
 import main.java.com.cryptotrade.repository.PriceRepository;
 import main.java.com.cryptotrade.service.PriceAggregatorService;
 
@@ -31,12 +32,16 @@ public class PriceAggregatorScheduler {
     @Transactional
     public void fetchAndStoreBestPrices() {
         try {
+         PricingDataWrapper wrapper = new PricingDataWrapper();
+
         // Fetch and process the pricing information from Binance
-        PricingData binancePricing = restTemplate.getForObject(BINANCE_API_URL, PricingData.class);
+        wrapper = restTemplate.getForObject(BINANCE_API_URL, PricingDataWrapper.class);
+        List<BinancePricingData> binancePricingList = wrapper.getBinancePricingDataList();
         // Assuming PricingData is a class that corresponds to the JSON structure of the Binance API response
 
         // Fetch and process the pricing information from Huobi
-        PricingData huobiPricing = restTemplate.getForObject(HUOBI_API_URL, PricingData.class);
+        wrapper = restTemplate.getForObject(HUOBI_API_URL, PricingDataWrapper.class);
+        List<BinancePricingData> huobiPricingList = wrapper.getHuobiPricingDataList();
         // Similarly, assuming PricingData corresponds to the Huobi API response
 
         AggregatedPrice bestPrices = priceAggregatorService.aggregateBestPrices(binancePricing, huobiPricing);
