@@ -94,9 +94,9 @@ public class TradingService {
                                         transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
                                     }
                                 }
-                            } else {
+                            } else { //SELLING BTC/ETH FOR USDT
                                 if (baseCurrency.equalsIgnoreCase("BTC")) {
-                                    // Check if the user has enough USDT to buy ETH
+                                    // Check if the user has enough BTC to buy USDT
                                     if (baseCurrencyBalance < (amount * btcPrice.getBid())) {
                                         throw new IllegalStateException("Insufficient balance for wallet");
                                     } else {
