@@ -10,7 +10,7 @@ public class WalletBalance {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id", nullable = false)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "userId")
     private Wallet wallet;
 
     @Column(nullable = false)
@@ -60,14 +60,6 @@ public class WalletBalance {
 
     public void setBalance(BigDecimal balance){
         this.balance = balance;
-    }
-
-    public void addBalance(BigDecimal balance){
-        this.balance = this.balance.add(balance);
-    }
-
-    public void subtractBalance(BigDecimal balance){
-        this.balance = this.balance.subtract(balance);
     }
 
     // toString() method...

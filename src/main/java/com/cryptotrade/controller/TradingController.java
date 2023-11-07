@@ -38,7 +38,7 @@ public class TradingController {
     public ResponseEntity<?> getWalletBalance(@RequestParam String userId) {
         try {
             Wallet wallet = walletService.getWalletByUserId(userId);
-            return ResponseEntity.ok(wallet);
+            return ResponseEntity.ok(wallet.getBalances());
         } catch (Exception e) {
             // Log and handle the exception appropriately
             return ResponseEntity.badRequest().body("Error retrieving wallet balance");

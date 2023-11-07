@@ -9,10 +9,12 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
-public interface WalletRepository extends JpaRepository<Wallet, Long> {
+public interface WalletRepository extends JpaRepository<Wallet, BigDecimal> {
     
 // Find a wallet balance by the user's ID and the currency
     Optional<WalletBalance> findByUserIdAndCurrency(String userId, String currency);
+
+    Optional<WalletBalance> findByUserId(String userId);
     
     // Method to increase the balance of a specific currency in the user's wallet balance
     @Modifying

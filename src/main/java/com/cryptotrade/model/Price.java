@@ -16,6 +16,12 @@ public class Price {
     public Price() {
     }
 
+    public Price(String symbol, BigDecimal bidPrice, BigDecimal askPrice) {
+        this.symbol = symbol;
+        this.bidPrice = bidPrice;
+        this.askPrice = askPrice;
+    }
+    
     public Price(String symbol, BigDecimal bidPrice, BigDecimal askPrice, Instant timestamp) {
         this.symbol = symbol;
         this.bidPrice = bidPrice;

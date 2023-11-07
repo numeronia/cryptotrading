@@ -3,6 +3,9 @@ package main.java.com.cryptotrade.service;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import main.java.com.cryptotrade.model.Wallet;
+
 import javax.transaction.Transactional;
 import java.util.concurrent.TimeUnit;
 
@@ -18,12 +21,14 @@ public class TradingService {
     private final WalletService walletService;
     private final TransactionRepository transactionRepository;
     private final RedissonClient redissonClient;
+    private final PriceAggregatorService priceAggregatorService;
     private final TransactionHistoryService transactionHistoryService;
 
     @Autowired
-    public TradeService(RedissonClient redissonClient, WalletService walletService, TransactionRepository transactionRepository, TransactionHistoryService transactionHistoryService) {
+    public TradeService(RedissonClient redissonClient, WalletService walletService, PriceAggregatorService priceAggregatorService, TransactionRepository transactionRepository, TransactionHistoryService transactionHistoryService) {
         this.walletService = walletService;
         this.transactionRepository = transactionRepository;
+        this.priceAggregatorService = priceAggregatorService;
         this.redissonClient = redissonClient;
         this.transactionHistoryService = transactionHistoryService;
     }
@@ -33,11 +38,21 @@ public class TradingService {
         // Construct a unique key for the lock
         String lockKey = "walletLock:" + walletId;
         RLock lock = redissonClient.getLock(lockKey);
+        Wallet wallet = walletService.getWalletById(walletId);
+        Set<WalletBalance> walletBalance = wallet.getBalances();
+        List<Price> aggregatedPrices = priceAggregatorService.getAggregatedPrices();
+        String action = tradeRequest.getAction().getResponse();
+        
 
         try {
             // Try to acquire the lock with a wait time. The lease time is the time after which the lock will be automatically released.
             if (lock.tryLock(10, 30, TimeUnit.SECONDS)) {
                 try {
+                    // Get the currency of the trade
+                    String currency = tradeRequest.getQuoteCurrency().getResponse();
+                    BigDecimal amount = tradeRequest.getAmount().getResponse();
+
+
                     // Check if the user has enough balance
                     if (wallet.getBalance() < amountNeeded) {
                         throw new IllegalStateException("Insufficient balance for wallet");
@@ -46,24 +61,14 @@ public class TradingService {
                         // Execute the trade
 
                         // Update the user's balance
-                        wallet.setBalance(wallet.getBalance() - amountNeeded);
+                        walletService.updateWalletBalance(wallet.getUserId(), action, null, false);
 
 
-                        // Save the trade and log transaction records for user
+                        // Increment wallet version, save the changed balance and log trade transaction records for user
+                        wallet.setVersion(wallet.getVersion() + 1);
                         walletRepository.save(wallet);
                         transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, null, lockKey, null);
-                    }
-                    
-     /* Deduct the amount from the wallet (for a BUY trade)
-    wallet.setBalance(wallet.getBalance().subtract(amountNeeded));
-    walletRepository.save(wallet);
-
-    // Add the amount to the wallet (for a SELL trade)
-    wallet.setBalance(wallet.getBalance().add(amountNeeded));
-    walletRepository.save(wallet); */
-                    
-
-                    
+                    }                    
                 } finally {
                     // Always unlock in a finally block
                     lock.unlock();

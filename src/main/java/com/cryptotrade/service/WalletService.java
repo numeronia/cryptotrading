@@ -41,7 +41,5 @@ public class WalletService {
         
         walletBalance.setBalance(newBalance);
         // No need to call save on walletBalance because the changes are cascaded from the Wallet entity.
-    }
-    
-    // Add more methods as per your requirements...
+    } 
 }

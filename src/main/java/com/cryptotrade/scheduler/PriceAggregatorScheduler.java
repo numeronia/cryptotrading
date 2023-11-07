@@ -32,23 +32,25 @@ public class PriceAggregatorScheduler {
     @Transactional
     public void fetchAndStoreBestPrices() {
         try {
-         PricingDataWrapper wrapper = new PricingDataWrapper();
-
+         BinanceWrapper binanceWrapper = new BinanceWrapper();
+         HuobiWrapper huobiWrapper = new HuobiWrapper();
         // Fetch and process the pricing information from Binance
-        wrapper = restTemplate.getForObject(BINANCE_API_URL, PricingDataWrapper.class);
-        List<BinancePricingData> binancePricingList = wrapper.getBinancePricingDataList();
-        // Assuming PricingData is a class that corresponds to the JSON structure of the Binance API response
+        binanceWrapper = restTemplate.getForObject(BINANCE_API_URL, BinanceWrapper.class);
+        List<BinancePricingData> binancePricingList = binanceWrapper.getBinancePricingDataList();
 
         // Fetch and process the pricing information from Huobi
-        wrapper = restTemplate.getForObject(HUOBI_API_URL, PricingDataWrapper.class);
-        List<BinancePricingData> huobiPricingList = wrapper.getHuobiPricingDataList();
-        // Similarly, assuming PricingData corresponds to the Huobi API response
+        huobiWrapper = restTemplate.getForObject(HUOBI_API_URL, HuobiWrapper.class);
+        List<HuobiPricingData> huobiPricingList = huobiWrapper.getHuobiPricingDataList();
 
-        AggregatedPrice bestPrices = priceAggregatorService.aggregateBestPrices(binancePricing, huobiPricing);
+        // Pass the two pricing lists into the aggregator service to aggregate the best prices for both currencies.
+        List<Price> bestPrices = priceAggregatorService.aggregateBestPrices(binancePricingList, huobiPricingList);
 
         // Save the best price data to the database based on current timestamp
-        bestPrices.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        priceRepository.save(bestPrices);
+        for (int i = 0; i < bestPrices.size(); i++) {
+            Price price = bestPrices.get(i);
+            price.setTimestamp(new Timestamp(System.currentTimeMillis()));
+            priceRepository.save(price);
+        }
 
         } catch (Exception e) {
             // Log the exception
