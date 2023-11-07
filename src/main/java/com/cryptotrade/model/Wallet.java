@@ -51,14 +51,6 @@ public class Wallet {
         this.balances = balances;
     }
 
-   /*public void addBalance(WalletBalance balance){
-        this.balances.add(balance);
-    }
-
-    public void removeBalance(WalletBalance balance){
-        this.balances.remove(balance);
-    }*/ 
-
     public Long getVersion(){
         return version;
     }
