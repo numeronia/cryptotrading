@@ -47,7 +47,7 @@ public class TradingController {
         try {
             Wallet wallet = walletService.getWalletByUserId(userId);
             List<WalletBalance> balances = wallet.getBalances();
-            String str = ("USDT: " + balances.get(0).getBalance() + " ,BTC: " + balances.get(1).getBalance() + " ,ETH: " + balances.get(2).getBalance());
+            String str = ("USDT: " + balances.get(0).getBalance() + " ,ETH: " + balances.get(1).getBalance() + " ,BTC: " + balances.get(2).getBalance());
             return ResponseEntity.ok(str);
         } catch (Exception e) {
             // Log and handle the exception appropriately
