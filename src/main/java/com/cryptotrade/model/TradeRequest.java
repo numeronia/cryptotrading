@@ -5,15 +5,15 @@ import java.math.BigDecimal;
 public class TradeRequest {
     private String userId; // Or some form of user identification, like username or email
     private String baseCurrency; // The currency that is being bought or sold (USDT -> BTC, USDT -> ETH)
-    private String quoteCurrency; // The currency to quote the trade in (BTC -> USDT, ETH -> USDT)
+    private String tradedIntoCurrency; // The currency traded into (BTC -> USDT, ETH -> USDT)
     private BigDecimal amount; // The amount of currency to trade
     private TradeAction action; // Enum for BUY or SELL action
 
     // Constructor
-    public TradeRequest(String userId, String baseCurrency, String quoteCurrency, BigDecimal amount, TradeAction action) {
+    public TradeRequest(String userId, String baseCurrency, String tradedIntoCurrency, BigDecimal amount, TradeAction action) {
         this.userId = userId;
         this.baseCurrency = baseCurrency;
-        this.quoteCurrency = quoteCurrency;
+        this.tradedIntoCurrency = tradedIntoCurrency;
         this.amount = amount;
         this.action = action;
     }
@@ -27,8 +27,8 @@ public class TradeRequest {
         return baseCurrency;
     }
 
-    public String getQuoteCurrency() {
-        return quoteCurrency;
+    public String getTradedIntoCurrency() {
+        return tradedIntoCurrency;
     }
 
     public BigDecimal getAmount() {
@@ -48,8 +48,8 @@ public class TradeRequest {
         this.baseCurrency = baseCurrency;
     }
 
-    public void setQuoteCurrency(String quoteCurrency) {
-        this.quoteCurrency = quoteCurrency;
+    public void setTradedIntoCurrency(String tradedIntoCurrency) {
+        this.tradedIntoCurrency = tradedIntoCurrency;
     }
 
     public void setAmount(BigDecimal amount) {
