@@ -49,27 +49,84 @@ public class TradingService {
             if (lock.tryLock(10, 30, TimeUnit.SECONDS)) {
                 try {
                     // Get the currency of the trade
-                    String currency = tradeRequest.getQuoteCurrency().getResponse();
+                    String baseCurrency = tradeRequest.getBaseCurrency().getResponse();
+                    String tradedIntoCurrency = tradeRequest.getTradedIntoCurrency().getResponse();
                     BigDecimal amount = tradeRequest.getAmount().getResponse();
-
+                    BigDecimal baseCurrencyBalance = walletBalance.get(baseCurrency).getBalance();
+                    BigDecimal tradedCurrencyBalance = walletBalance.get(tradedIntoCurrency).getBalance();
 
                     // Check if the user has enough balance
-                    if (wallet.getBalance() < amountNeeded) {
+                    if (currentBalance() < amountNeeded) {
                         throw new IllegalStateException("Insufficient balance for wallet");
                     } else {
+                        Price btcPrice = aggregatedPrices.get(0);
+                        Price ethPrice = aggregatedPrices.get(1);
 
-                        // Execute the trade
+                        // Check if the user is buying or selling
+                        if (action.equalsIgnoreCase("BUY")) {
+                            // Check if the user is buying BTC or ETH
+                            if (tradedIntoCurrency.equalsIgnoreCase("BTC")) {
+                                    // Check if the user has enough USDT to buy BTC
+                                    if (baseCurrencyBalance < (amount * btcPrice.getAsk())) {
+                                        throw new IllegalStateException("Insufficient balance for wallet");
+                                    } else {
+                                        // Update the user's balance
+                                        walletService.updateWalletBalance(wallet.getUserId(), tradedIntoCurrency, (amount / btcPrice.getAsk()), true);
+                                        walletService.updateWalletBalance(wallet.getUserId(), baseCurrency, amount, false);
 
-                        // Update the user's balance
-                        walletService.updateWalletBalance(wallet.getUserId(), action, null, false);
+                                        // Increment wallet version, save the changed balance and log trade transaction records for user
+                                        wallet.setVersion(wallet.getVersion() + 1);
+                                        walletRepository.save(wallet);
+                                        transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
+                                    }
+                                } else {
+                                    // Check if the user has enough USDT to buy ETH
+                                    if (baseCurrencyBalance < (amount * ethPrice.getAsk())) {
+                                        throw new IllegalStateException("Insufficient balance for wallet");
+                                    } else {
+                                        // Update the user's balance
+                                        walletService.updateWalletBalance(wallet.getUserId(), tradedIntoCurrency, (amount / ethPrice.getAsk()), true);
+                                        walletService.updateWalletBalance(wallet.getUserId(), baseCurrency, amount, false);
 
+                                        // Increment wallet version, save the changed balance and log trade transaction records for user
+                                        wallet.setVersion(wallet.getVersion() + 1);
+                                        walletRepository.save(wallet);
+                                        transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
+                                    }
+                                }
+                            } else {
+                                if (baseCurrency.equalsIgnoreCase("BTC")) {
+                                    // Check if the user has enough USDT to buy ETH
+                                    if (baseCurrencyBalance < (amount * btcPrice.getBid())) {
+                                        throw new IllegalStateException("Insufficient balance for wallet");
+                                    } else {
+                                        // Update the user's balance
+                                        walletService.updateWalletBalance(wallet.getUserId(), tradedIntoCurrency, (amount * btcPrice.getBid()), true);
+                                        walletService.updateWalletBalance(wallet.getUserId(), baseCurrency, amount, false);
 
-                        // Increment wallet version, save the changed balance and log trade transaction records for user
-                        wallet.setVersion(wallet.getVersion() + 1);
-                        walletRepository.save(wallet);
-                        transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, null, lockKey, null);
-                    }                    
-                } finally {
+                                        // Increment wallet version, save the changed balance and log trade transaction records for user
+                                        wallet.setVersion(wallet.getVersion() + 1);
+                                        walletRepository.save(wallet);
+                                        transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
+                                    }
+                                } else {
+                                     if (baseCurrencyBalance < (amount * ethPrice.getBid())) {
+                                        throw new IllegalStateException("Insufficient balance for wallet");
+                                    } else {
+                                        // Update the user's balance
+                                        walletService.updateWalletBalance(wallet.getUserId(), tradedIntoCurrency, (amount * ethPrice.getBid()), true);
+                                        walletService.updateWalletBalance(wallet.getUserId(), baseCurrency, amount, false);
+
+                                    // Increment wallet version, save the changed balance and log trade transaction records for user
+                                        wallet.setVersion(wallet.getVersion() + 1);
+                                        walletRepository.save(wallet);
+                                        transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
+                                    }
+                                }  
+                            }             
+                        }
+                    } 
+                    finally {
                     // Always unlock in a finally block
                     lock.unlock();
                 }
