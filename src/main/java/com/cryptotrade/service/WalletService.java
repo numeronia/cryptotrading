@@ -7,6 +7,10 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Optional;
 
+import main.java.com.cryptotrade.model.Wallet;
+import main.java.com.cryptotrade.model.WalletBalance;
+import main.java.com.cryptotrade.repository.WalletRepository;
+
 @Service
 public class WalletService {
 

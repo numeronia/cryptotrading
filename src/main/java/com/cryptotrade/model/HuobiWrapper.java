@@ -1,12 +1,14 @@
 package main.java.com.cryptotrade.model;
 
+import java.util.List;
+
 public class HuobiWrapper {
     private List<HuobiPricingData> huobiPricingDataList;
 
     public HuobiWrapper() {
     }
 
-    public PricingDataWrapper(List<HuobiPricingData> huobiPricingDataList) {
+    public HuobiWrapper(List<HuobiPricingData> huobiPricingDataList) {
         this.huobiPricingDataList = huobiPricingDataList;
     }
 

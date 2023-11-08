@@ -1,5 +1,7 @@
 package main.java.com.cryptotrade.model;
 
+import java.math.BigDecimal;
+
 public class BinancePricingData {
     private String symbol;
     private BigDecimal bidPrice;

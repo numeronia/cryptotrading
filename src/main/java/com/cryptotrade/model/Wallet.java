@@ -4,6 +4,14 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Version;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 
 public class Wallet {
     @Id

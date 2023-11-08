@@ -1,10 +1,11 @@
 package main.java.com.cryptotrade.model;
 
 import java.math.BigDecimal;
+import main.java.com.cryptotrade.model.TradeAction;
 
 public class TradeRequest {
     private String userId; // Or some form of user identification, like username or email
-    private String baseCurrency; // The currency that is being bought or sold (USDT -> BTC, USDT -> ETH)
+    private String baseCurrency; // Which currency is being used to trade into another currency (USDT -> BTC, USDT -> ETH)
     private String tradedIntoCurrency; // The currency traded into (BTC -> USDT, ETH -> USDT)
     private BigDecimal amount; // The amount of currency to trade
     private TradeAction action; // Enum for BUY or SELL action
@@ -66,7 +67,7 @@ public class TradeRequest {
         return "TradeRequest{" +
                 "userId='" + userId + '\'' +
                 ", baseCurrency='" + baseCurrency + '\'' +
-                ", quoteCurrency='" + quoteCurrency + '\'' +
+                ", quoteCurrency='" + tradedIntoCurrency + '\'' +
                 ", amount=" + amount +
                 ", action=" + action +
                 '}';

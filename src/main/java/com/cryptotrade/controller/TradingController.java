@@ -4,13 +4,22 @@ import java.util.List;
 
 import main.java.com.cryptotrade.model.Price;
 import main.java.com.cryptotrade.model.Wallet;
+import main.java.com.cryptotrade.model.WalletBalance;
+import main.java.com.cryptotrade.model.TradeRequest;
+import main.java.com.cryptotrade.model.TransactionHistory;
+import main.java.com.cryptotrade.repository.WalletRepository;
+import main.java.com.cryptotrade.service.WalletService;
 import main.java.com.cryptotrade.service.TradingService;
+import main.java.com.cryptotrade.service.TransactionHistoryService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class TradingController {
 
-    private final PriceService priceService;
     private final WalletService walletService;
     private final TransactionHistoryService transactionHistoryService;
     @Autowired
@@ -31,11 +40,11 @@ public class TradingController {
     }
 
     @PostMapping("/trade")
-    public ResponseEntity<Trade> executeTrade(@RequestBody TradeRequest tradeRequest) {
+    public ResponseEntity<?> executeTrade(@RequestBody TradeRequest tradeRequest) {
         try {
             TradeResult tradeResult = tradingService.executeTrade(tradeRequest);
             return ResponseEntity.ok(tradeResult);
-        } catch (InsufficientBalanceException e) {
+        } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body("Insufficient balance");
         } catch (Exception e) {
             // Log and handle the exception appropriately

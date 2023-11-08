@@ -1,5 +1,7 @@
 package main.java.com.cryptotrade.model;
 
+import java.util.List;
+
 public class BinanceWrapper {
     private List<BinancePricingData> binancePricingDataList;
 

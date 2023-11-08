@@ -8,10 +8,16 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import java.util.List;
 
-import main.java.com.cryptotrade.model.PricingDataWrapper;
 import main.java.com.cryptotrade.repository.PriceRepository;
 import main.java.com.cryptotrade.service.PriceAggregatorService;
+import main.java.com.cryptotrade.model.Price;
+import main.java.com.cryptotrade.model.BinanceWrapper;
+import main.java.com.cryptotrade.model.BinancePricingData;
+import main.java.com.cryptotrade.model.HuobiWrapper;
+import main.java.com.cryptotrade.model.HuobiPricingData;
+import java.sql.Timestamp;
 
 @Component
 public class PriceAggregatorScheduler {

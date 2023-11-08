@@ -8,6 +8,9 @@ import main.java.com.cryptotrade.model.WalletBalance;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, BigDecimal> {
     

@@ -1,6 +1,11 @@
 package main.java.com.cryptotrade.model;
 
 import javax.persistence.Entity;
+import java.math.BigDecimal;
+import java.time.Instant;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Price {

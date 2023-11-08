@@ -1,5 +1,7 @@
 package main.java.com.cryptotrade.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class TransactionHistory {
 

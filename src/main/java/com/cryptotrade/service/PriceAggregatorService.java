@@ -25,11 +25,11 @@ public class PriceAggregatorService {
         for (int i = 0; i < binanceData.length(); i++) {
             BinancePricingData temp = binanceData.get(i);
             if (temp.getSymbol().equalsIgnoreCase("BTCUSDT")) {
-                bestBTCBid = binanceData(i).getBid();
-                bestBTCAsk = binanceData(i).getAsk();
+                bestBTCBid = temp.getBidPrice();
+                bestBTCAsk = temp.getAskPrice();
             } else if (temp.getSymbol().equalsIgnoreCase("ETHUSDT")) {
-                bestETHBid = binanceData(i).getBid();
-                bestETHAsk = binanceData(i).getAsk();
+                bestETHBid = temp.getBidPrice();
+                bestETHAsk = temp.getAskPrice();
             } else {
                 continue;
             }
@@ -38,21 +38,21 @@ public class PriceAggregatorService {
        for (int j = 0; j < huobiData.length(); j++) {
         HuobiPricingData temp = huobiData.get(i);
         if (temp.getSymbol().equalsIgnoreCase("BTCUSDT")) {
-            if (temp.getBid() > bestBTCBid) {
-                bestBTCBid = huobiData(i).getBid();
+            if (temp.getBid().compareTo(bestBTCBid) > 0) {
+                bestBTCBid = temp.getBid();
             }
 
-            if (temp.getAsk() < bestBTCAsk) {
-                bestBTCAsk = huobiData(i).getAsk();
+            if (temp.getAsk().compareTo(bestBTCAsk) < 0) {
+                bestBTCAsk = temp.getAsk();
             }
 
         } else if (temp.getSymbol().equalsIgnoreCase("ETHUSDT")) {
-            if (temp.getBid() > bestETHBid) {
-                bestETHBid = huobiData(i).getBid();
+            if (temp.getBid().compareTo(bestETHBid) > 0) {
+                bestETHBid = temp.getBid();
             }
 
-            if (temp.getAsk() < bestETHAsk) {
-                bestETHAsk = huobiData(i).getAsk();
+            if (temp.getAsk().compareTo(bestETHAsk) < 0) {
+                bestETHAsk = temp.getAsk();
             }
 
         } else {

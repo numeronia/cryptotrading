@@ -7,6 +7,7 @@ import main.java.com.cryptotrade.model.WalletBalance;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import main.java.com.cryptotrade.model.TransactionHistory;
 
 @Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, BigDecimal> {

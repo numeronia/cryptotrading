@@ -5,10 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import main.java.com.cryptotrade.model.Wallet;
+import main.java.com.cryptotrade.model.WalletBalance;
+import main.java.com.cryptotrade.model.Price;
+import main.java.com.cryptotrade.model.TransactionHistory;
+import main.java.com.cryptotrade.model.TradeRequest;
+import main.java.com.cryptotrade.repository.TransactionHistoryRepository;
+import main.java.com.cryptotrade.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 import java.util.concurrent.TimeUnit;
 
+import java.util.List;
+import java.util.Set;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.sql.Timestamp;
 
 import org.redisson.api.RedissonClient;
 import org.redisson.api.RLock;
@@ -19,13 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TradingService {
     
     private final WalletService walletService;
-    private final TransactionRepository transactionRepository;
+    private final TransactionHistoryRepository transactionRepository;
     private final RedissonClient redissonClient;
     private final PriceAggregatorService priceAggregatorService;
     private final TransactionHistoryService transactionHistoryService;
 
     @Autowired
-    public TradeService(RedissonClient redissonClient, WalletService walletService, PriceAggregatorService priceAggregatorService, TransactionRepository transactionRepository, TransactionHistoryService transactionHistoryService) {
+    public TradingService(RedissonClient redissonClient, WalletService walletService, PriceAggregatorService priceAggregatorService, TransactionHistoryRepository transactionRepository, TransactionHistoryService transactionHistoryService) {
         this.walletService = walletService;
         this.transactionRepository = transactionRepository;
         this.priceAggregatorService = priceAggregatorService;
@@ -38,8 +51,8 @@ public class TradingService {
         // Construct a unique key for the lock
         String lockKey = "walletLock:" + walletId;
         RLock lock = redissonClient.getLock(lockKey);
-        Wallet wallet = walletService.getWalletById(walletId);
-        Set<WalletBalance> walletBalance = wallet.getBalances();
+        Wallet wallet = walletService.getWalletByUserId(walletId);
+        Set<WalletBalance> walletBalances = wallet.getBalances();
         List<Price> aggregatedPrices = priceAggregatorService.getAggregatedPrices();
         String action = tradeRequest.getAction().getResponse();
         
@@ -52,11 +65,21 @@ public class TradingService {
                     String baseCurrency = tradeRequest.getBaseCurrency().getResponse();
                     String tradedIntoCurrency = tradeRequest.getTradedIntoCurrency().getResponse();
                     BigDecimal amount = tradeRequest.getAmount().getResponse();
-                    BigDecimal baseCurrencyBalance = walletBalance.get(baseCurrency).getBalance();
-                    BigDecimal tradedCurrencyBalance = walletBalance.get(tradedIntoCurrency).getBalance();
+                    BigDecimal baseCurrencyBalance = BigDecimal.ZERO;
+                    BigDecimal tradedCurrencyBalance = BigDecimal.ZERO;
+
+                    for (Iterator<WalletBalance> iterator = walletBalances.iterator(); iterator.hasNext();) {
+                        WalletBalance walletBalance = iterator.next();
+                        if (walletBalance.getCurrency().equals(baseCurrency)) {
+                            baseCurrencyBalance = walletBalance.getBalance();
+                        }
+                        if (walletBalance.getCurrency().equals(tradedIntoCurrency)) {
+                            tradedCurrencyBalance = walletBalance.getBalance();
+                        }
+                    }
 
                     // Check if the user has enough balance
-                    if (currentBalance() < amountNeeded) {
+                    if (baseCurrencyBalance().compareTo(amount) < 0) {
                         throw new IllegalStateException("Insufficient balance for wallet");
                     } else {
                         Price btcPrice = aggregatedPrices.get(0);
@@ -67,7 +90,7 @@ public class TradingService {
                             // Check if the user is buying BTC or ETH
                             if (tradedIntoCurrency.equalsIgnoreCase("BTC")) {
                                     // Check if the user has enough USDT to buy BTC
-                                    if (baseCurrencyBalance < (amount * btcPrice.getAsk())) {
+                                    if (baseCurrencyBalance.compareTo(amount * btcPrice.getAsk()) < 0) {
                                         throw new IllegalStateException("Insufficient balance for wallet");
                                     } else {
                                         // Update the user's balance
@@ -81,7 +104,7 @@ public class TradingService {
                                     }
                                 } else {
                                     // Check if the user has enough USDT to buy ETH
-                                    if (baseCurrencyBalance < (amount * ethPrice.getAsk())) {
+                                    if (baseCurrencyBalance.compareTo(amount * ethPrice.getAsk()) < 0) {
                                         throw new IllegalStateException("Insufficient balance for wallet");
                                     } else {
                                         // Update the user's balance
@@ -97,7 +120,7 @@ public class TradingService {
                             } else { //SELLING BTC/ETH FOR USDT
                                 if (baseCurrency.equalsIgnoreCase("BTC")) {
                                     // Check if the user has enough BTC to buy USDT
-                                    if (baseCurrencyBalance < (amount * btcPrice.getBid())) {
+                                    if (baseCurrencyBalance.compareTo(amount * btcPrice.getBid()) < 0) {
                                         throw new IllegalStateException("Insufficient balance for wallet");
                                     } else {
                                         // Update the user's balance
@@ -110,7 +133,7 @@ public class TradingService {
                                         transactionHistoryService.logTransaction(wallet.getUserId(), lockKey, baseCurrency, lockKey, amount);
                                     }
                                 } else {
-                                     if (baseCurrencyBalance < (amount * ethPrice.getBid())) {
+                                     if (baseCurrencyBalance.compareTo (amount * ethPrice.getBid()) < 0) {
                                         throw new IllegalStateException("Insufficient balance for wallet");
                                     } else {
                                         // Update the user's balance
