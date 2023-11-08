@@ -1,6 +1,5 @@
-package main.java.com.cryptotrade.model;
+package com.cryptotrade.model;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -13,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 
+@Entity
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

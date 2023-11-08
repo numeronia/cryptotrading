@@ -1,4 +1,4 @@
-package main.java.com.cryptotrade.model;
+package com.cryptotrade.model;
 
 import javax.persistence.Entity;
 import java.math.BigDecimal;

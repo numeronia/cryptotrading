@@ -1,14 +1,9 @@
-package main.java.com.cryptotrade.repository;
-
-import java.math.BigDecimal;
-import java.util.Optional;
+package com.cryptotrade.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.cryptotrade.model.Price;
 
-import main.java.com.cryptotrade.model.Price;
-import main.java.com.cryptotrade.model.WalletBalance;
-
-public interface PriceRepository extends JpaRepository<Price, BigDecimal> {
+public interface PriceRepository extends JpaRepository<Price, Long> {
     // Find a wallet balance by symbol
     Price findBySymbol(String symbol);
 

@@ -1,19 +1,18 @@
-package main.java.com.cryptotrade.controller;
+package com.cryptotrade.controller;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import main.java.com.cryptotrade.model.Price;
-import main.java.com.cryptotrade.model.Wallet;
-import main.java.com.cryptotrade.model.WalletBalance;
-import main.java.com.cryptotrade.model.TradeRequest;
-import main.java.com.cryptotrade.model.TransactionHistory;
-import main.java.com.cryptotrade.repository.WalletRepository;
-import main.java.com.cryptotrade.service.WalletService;
-import main.java.com.cryptotrade.service.TradingService;
-import main.java.com.cryptotrade.service.TransactionHistoryService;
-import main.java.com.cryptotrade.service.PriceAggregatorService;
+import com.cryptotrade.model.Price;
+import com.cryptotrade.model.Wallet;
+import com.cryptotrade.model.WalletBalance;
+import com.cryptotrade.model.TradeRequest;
+import com.cryptotrade.model.TransactionHistory;
+import com.cryptotrade.service.WalletService;
+import com.cryptotrade.service.TradingService;
+import com.cryptotrade.service.TransactionHistoryService;
+import com.cryptotrade.service.PriceAggregatorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

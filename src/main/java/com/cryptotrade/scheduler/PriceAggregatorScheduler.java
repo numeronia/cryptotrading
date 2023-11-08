@@ -1,4 +1,4 @@
-package main.java.com.cryptotrade.scheduler;
+package com.cryptotrade.scheduler;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
-import main.java.com.cryptotrade.repository.PriceRepository;
-import main.java.com.cryptotrade.service.PriceAggregatorService;
-import main.java.com.cryptotrade.model.Price;
-import main.java.com.cryptotrade.model.BinanceWrapper;
-import main.java.com.cryptotrade.model.BinancePricingData;
-import main.java.com.cryptotrade.model.HuobiWrapper;
-import main.java.com.cryptotrade.model.HuobiPricingData;
+import com.cryptotrade.repository.PriceRepository;
+import com.cryptotrade.service.PriceAggregatorService;
+import com.cryptotrade.model.Price;
+import com.cryptotrade.model.BinanceWrapper;
+import com.cryptotrade.model.BinancePricingData;
+import com.cryptotrade.model.HuobiWrapper;
+import com.cryptotrade.model.HuobiPricingData;
 import java.sql.Timestamp;
 
 @Component

@@ -1,7 +1,7 @@
-package main.java.com.cryptotrade.model;
+package com.cryptotrade.model;
 
 import java.math.BigDecimal;
-import main.java.com.cryptotrade.model.TradeAction;
+import com.cryptotrade.model.TradeAction;
 
 public class TradeRequest {
     private String userId; // Or some form of user identification, like username or email

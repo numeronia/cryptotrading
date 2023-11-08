@@ -1,16 +1,16 @@
-package main.java.com.cryptotrade.service;
+package com.cryptotrade.service;
 
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import main.java.com.cryptotrade.model.Wallet;
-import main.java.com.cryptotrade.model.WalletBalance;
-import main.java.com.cryptotrade.model.Price;
-import main.java.com.cryptotrade.model.TransactionHistory;
-import main.java.com.cryptotrade.model.TradeRequest;
-import main.java.com.cryptotrade.repository.TransactionHistoryRepository;
-import main.java.com.cryptotrade.repository.WalletRepository;
+import com.cryptotrade.model.Wallet;
+import com.cryptotrade.model.WalletBalance;
+import com.cryptotrade.model.Price;
+import com.cryptotrade.model.TransactionHistory;
+import com.cryptotrade.model.TradeRequest;
+import com.cryptotrade.repository.TransactionHistoryRepository;
+import com.cryptotrade.repository.WalletRepository;
 
 import javax.transaction.Transactional;
 import java.util.concurrent.TimeUnit;

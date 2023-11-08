@@ -1,4 +1,4 @@
-package main.java.com.cryptotrade.service;
+package com.cryptotrade.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import main.java.com.cryptotrade.model.BinancePricingData;
-import main.java.com.cryptotrade.model.HuobiPricingData;
-import main.java.com.cryptotrade.model.Price;
-import main.java.com.cryptotrade.repository.PriceRepository;
+import com.cryptotrade.model.BinancePricingData;
+import com.cryptotrade.model.HuobiPricingData;
+import com.cryptotrade.model.Price;
+import com.cryptotrade.repository.PriceRepository;
 
 
 @Service

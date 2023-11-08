@@ -1,4 +1,4 @@
-package main.java.com.cryptotrade.model;
+package com.cryptotrade.model;
 
 public enum TradeAction {
     BUY("BUY"), SELL("SELL");

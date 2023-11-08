@@ -1,16 +1,13 @@
-package main.java.com.cryptotrade.service;
+package com.cryptotrade.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
-import java.util.Currency;
-import java.util.Optional;
 
-import main.java.com.cryptotrade.model.Wallet;
-import main.java.com.cryptotrade.model.WalletBalance;
-import main.java.com.cryptotrade.repository.WalletRepository;
-import javax.management.RuntimeErrorException;
+import com.cryptotrade.model.Wallet;
+import com.cryptotrade.model.WalletBalance;
+import com.cryptotrade.repository.WalletRepository;
 
 @Service
 public class WalletService {

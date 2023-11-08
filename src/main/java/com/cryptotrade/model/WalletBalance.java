@@ -1,12 +1,7 @@
-package main.java.com.cryptotrade.model;
+package com.cryptotrade.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Entity
 public class WalletBalance {
