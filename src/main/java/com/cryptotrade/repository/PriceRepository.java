@@ -10,6 +10,6 @@ import main.java.com.cryptotrade.model.WalletBalance;
 
 public interface PriceRepository extends JpaRepository<Price, BigDecimal> {
     // Find a wallet balance by symbol
-    Optional<Price> findBySymbol(String symbol);
+    Price findBySymbol(String symbol);
 
 }

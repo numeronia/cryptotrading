@@ -2,7 +2,7 @@ package main.java.com.cryptotrade.model;
 
 import javax.persistence.Entity;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.sql.Timestamp;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +15,7 @@ public class Price {
     private String symbol;
     private BigDecimal bidPrice; // Sell order price
     private BigDecimal askPrice; // Buy order price
-    private Instant timestamp;
+    private Timestamp timestamp;
 
     // Constructors, getters, and setters...
     public Price() {
@@ -27,7 +27,7 @@ public class Price {
         this.askPrice = askPrice;
     }
     
-    public Price(String symbol, BigDecimal bidPrice, BigDecimal askPrice, Instant timestamp) {
+    public Price(String symbol, BigDecimal bidPrice, BigDecimal askPrice, Timestamp timestamp) {
         this.symbol = symbol;
         this.bidPrice = bidPrice;
         this.askPrice = askPrice;
@@ -67,11 +67,11 @@ public class Price {
         this.askPrice = askPrice;
     }
 
-    public Instant getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

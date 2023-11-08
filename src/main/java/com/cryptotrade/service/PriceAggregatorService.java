@@ -5,24 +5,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import main.java.com.cryptotrade.model.BinancePricingData;
 import main.java.com.cryptotrade.model.HuobiPricingData;
 import main.java.com.cryptotrade.model.Price;
+import main.java.com.cryptotrade.repository.PriceRepository;
+
 
 @Service
 public class PriceAggregatorService {
+
+    private final PriceRepository priceRepository;
+
+    @Autowired
+    PriceAggregatorService(PriceRepository priceRepository) {
+        this.priceRepository = priceRepository;
+    }
     
     public List<Price> aggregateBestPrices(List<BinancePricingData> binanceData, List<HuobiPricingData> huobiData) {
         // Logic to compare and find the best bid and ask
-        BigDecimal bestBTCBid;
-        BigDecimal bestBTCAsk;
-        BigDecimal bestETHBid;
-        BigDecimal bestETHAsk;
+        BigDecimal bestBTCBid = BigDecimal.ZERO;
+        BigDecimal bestBTCAsk = BigDecimal.ZERO;
+        BigDecimal bestETHBid = BigDecimal.ZERO;
+        BigDecimal bestETHAsk = BigDecimal.ZERO;
 
         // Logic to aggregate the best bid and ask
         // General understanding: buying low and selling high - thus, the best price is one where the buy in is lower than the other, and sell is higher than the other.
-        for (int i = 0; i < binanceData.length(); i++) {
+        for (int i = 0; i < binanceData.size(); i++) {
             BinancePricingData temp = binanceData.get(i);
             if (temp.getSymbol().equalsIgnoreCase("BTCUSDT")) {
                 bestBTCBid = temp.getBidPrice();
@@ -35,8 +45,8 @@ public class PriceAggregatorService {
             }
        }
 
-       for (int j = 0; j < huobiData.length(); j++) {
-        HuobiPricingData temp = huobiData.get(i);
+       for (int j = 0; j < huobiData.size(); j++) {
+        HuobiPricingData temp = huobiData.get(j);
         if (temp.getSymbol().equalsIgnoreCase("BTCUSDT")) {
             if (temp.getBid().compareTo(bestBTCBid) > 0) {
                 bestBTCBid = temp.getBid();

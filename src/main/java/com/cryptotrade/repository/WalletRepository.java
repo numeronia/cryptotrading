@@ -15,10 +15,12 @@ import org.springframework.data.jpa.repository.Query;
 public interface WalletRepository extends JpaRepository<Wallet, BigDecimal> {
     
 // Find a wallet balance by the user's ID and the currency
-    Optional<WalletBalance> findByUserIdAndCurrency(String userId, String currency);
+    WalletBalance findByUserIdAndCurrency(String userId, String currency);
 
-    Optional<WalletBalance> findByUserId(String userId);
-    
+    Wallet findByUserId(Long userId);
+
+    Wallet findByWalletId(Long walletId);
+   
     // Method to increase the balance of a specific currency in the user's wallet balance
     @Modifying
     @Query("UPDATE WalletBalance wb SET wb.balance = wb.balance + :amount WHERE wb.userId = :userId AND wb.currency = :currency")

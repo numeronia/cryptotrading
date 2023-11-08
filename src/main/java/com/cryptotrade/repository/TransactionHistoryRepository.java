@@ -8,8 +8,9 @@ import main.java.com.cryptotrade.model.WalletBalance;
 import java.math.BigDecimal;
 import java.util.Optional;
 import main.java.com.cryptotrade.model.TransactionHistory;
+import java.util.List;
 
 @Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, BigDecimal> {
-    
+    List<TransactionHistory> findByUserIdOrderByTransactionTimeDesc(String userId);
 }

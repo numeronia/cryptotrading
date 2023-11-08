@@ -10,6 +10,7 @@ import java.util.Optional;
 import main.java.com.cryptotrade.model.Wallet;
 import main.java.com.cryptotrade.model.WalletBalance;
 import main.java.com.cryptotrade.repository.WalletRepository;
+import javax.management.RuntimeErrorException;
 
 @Service
 public class WalletService {
@@ -21,15 +22,23 @@ public class WalletService {
         this.walletRepository = walletRepository;
     }
 
-    // Fetch wallet balances by user ID
-    public Wallet getWalletByUserId(String userId) {
-        return walletRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found for user: " + userId));
+    // Fetch wallet by user ID
+    public Wallet getWalletByUserId(Long userId) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+
+        return wallet;
+    }
+
+        // Fetch wallet by wallet ID
+    public Wallet getWalletByWalletId(Long walletId) {
+        Wallet wallet = walletRepository.findByWalletId(walletId);
+ 
+        return wallet;
     }
 
     // Update wallet balance for a specific currency
     @Transactional
-    public void updateWalletBalance(String userId, String currencyCode, BigDecimal amount, boolean isCredit) {
+    public void updateWalletBalance(Long userId, String currencyCode, BigDecimal amount, boolean isCredit) {
         Wallet wallet = getWalletByUserId(userId);
         
         WalletBalance walletBalance = wallet.getBalances().stream()
